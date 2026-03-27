@@ -40,9 +40,9 @@ function normalizeLayout(layout: BirthdayBackgroundLayout | undefined): Birthday
 }
 
 class BirthdayBackgroundsService {
-  list() {
-    return dataRepository
-      .getBirthdayBackgrounds()
+  async list() {
+    const backgrounds = await dataRepository.getBirthdayBackgrounds();
+    return backgrounds
       .map((background) => ({
         ...background,
         photoMaskShape: background.photoMaskShape ?? 'circle',
@@ -52,7 +52,7 @@ class BirthdayBackgroundsService {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  create(input: BirthdayBackgroundInput) {
+  async create(input: BirthdayBackgroundInput) {
     const now = dayjs().toISOString();
     const groupId = normalizeOptional(input.groupId);
     const background: BirthdayBackground = {
@@ -69,13 +69,13 @@ class BirthdayBackgroundsService {
       updatedAt: now,
     };
 
-    const backgrounds = dataRepository.getBirthdayBackgrounds();
-    dataRepository.setBirthdayBackgrounds([background, ...backgrounds]);
+    const backgrounds = await dataRepository.getBirthdayBackgrounds();
+    await dataRepository.setBirthdayBackgrounds([background, ...backgrounds]);
     return background;
   }
 
-  update(id: string, input: BirthdayBackgroundInput) {
-    const backgrounds = dataRepository.getBirthdayBackgrounds();
+  async update(id: string, input: BirthdayBackgroundInput) {
+    const backgrounds = await dataRepository.getBirthdayBackgrounds();
     const current = backgrounds.find((item) => item.id === id);
     if (!current) {
       return null;
@@ -96,7 +96,7 @@ class BirthdayBackgroundsService {
       updatedAt: dayjs().toISOString(),
     };
 
-    dataRepository.setBirthdayBackgrounds(backgrounds.map((item) => (item.id === id ? updated : item)));
+    await dataRepository.setBirthdayBackgrounds(backgrounds.map((item) => (item.id === id ? updated : item)));
     return updated;
   }
 }

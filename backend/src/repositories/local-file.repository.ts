@@ -68,27 +68,27 @@ export class LocalFileRepository implements DataRepository {
     return this.filePath;
   }
 
-  getUser() {
+  async getUser() {
     return { ...this.data.user };
   }
 
-  getSettings() {
+  async getSettings() {
     return { ...this.data.settings };
   }
 
-  setSettings(settings: SeedData['settings']) {
+  async setSettings(settings: SeedData['settings']) {
     this.data.settings = { ...settings };
     this.persist();
   }
 
-  getRegistration() {
+  async getRegistration() {
     return {
       ...this.data.registration,
       address: { ...this.data.registration.address },
     };
   }
 
-  setRegistration(registration: SeedData['registration']) {
+  async setRegistration(registration: SeedData['registration']) {
     this.data.registration = {
       ...registration,
       address: { ...registration.address },
@@ -96,47 +96,47 @@ export class LocalFileRepository implements DataRepository {
     this.persist();
   }
 
-  getAppointments() {
+  async getAppointments() {
     return this.data.appointments.map((appointment) => ({ ...appointment }));
   }
 
-  setAppointments(appointments: SeedData['appointments']) {
+  async setAppointments(appointments: SeedData['appointments']) {
     this.data.appointments = appointments.map((appointment) => ({ ...appointment }));
     this.persist();
   }
 
-  getClients() {
+  async getClients() {
     return this.data.clients.map((client) => ({ ...client }));
   }
 
-  setClients(clients: SeedData['clients']) {
+  async setClients(clients: SeedData['clients']) {
     this.data.clients = clients.map((client) => ({ ...client }));
     this.persist();
   }
 
-  getBirthdays() {
+  async getBirthdays() {
     return this.data.birthdays.map((birthday) => ({ ...birthday }));
   }
 
-  setBirthdays(birthdays: SeedData['birthdays']) {
+  async setBirthdays(birthdays: SeedData['birthdays']) {
     this.data.birthdays = birthdays.map((birthday) => ({ ...birthday }));
     this.persist();
   }
 
-  getBirthdayGroups() {
+  async getBirthdayGroups() {
     return this.data.birthdayGroups.map((group) => ({ ...group }));
   }
 
-  setBirthdayGroups(groups: SeedData['birthdayGroups']) {
+  async setBirthdayGroups(groups: SeedData['birthdayGroups']) {
     this.data.birthdayGroups = groups.map((group) => ({ ...group }));
     this.persist();
   }
 
-  getBirthdayBackgrounds() {
+  async getBirthdayBackgrounds() {
     return this.data.birthdayBackgrounds.map((background) => ({ ...background }));
   }
 
-  setBirthdayBackgrounds(backgrounds: SeedData['birthdayBackgrounds']) {
+  async setBirthdayBackgrounds(backgrounds: SeedData['birthdayBackgrounds']) {
     this.data.birthdayBackgrounds = backgrounds.map((background) => ({ ...background }));
     this.persist();
   }

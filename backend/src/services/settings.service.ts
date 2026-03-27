@@ -12,14 +12,14 @@ function normalizeSettings(settings: Settings | Omit<Settings, 'birthdaysModuleE
 }
 
 class SettingsService {
-  get() {
-    return normalizeSettings(dataRepository.getSettings() as Settings | Omit<Settings, 'birthdaysModuleEnabled'>);
+  async get() {
+    return normalizeSettings((await dataRepository.getSettings()) as Settings | Omit<Settings, 'birthdaysModuleEnabled'>);
   }
 
-  update(settings: Settings) {
+  async update(settings: Settings) {
     const normalized = normalizeSettings(settings);
-    dataRepository.setSettings(normalized);
-    return normalizeSettings(dataRepository.getSettings() as Settings | Omit<Settings, 'birthdaysModuleEnabled'>);
+    await dataRepository.setSettings(normalized);
+    return normalizeSettings((await dataRepository.getSettings()) as Settings | Omit<Settings, 'birthdaysModuleEnabled'>);
   }
 }
 

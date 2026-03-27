@@ -37,26 +37,26 @@ function buildBirthday(input: BirthdayInput, metadata: Pick<BirthdayContact, 'id
 }
 
 class BirthdaysService {
-  list() {
-    return dataRepository
-      .getBirthdays()
+  async list() {
+    const birthdays = await dataRepository.getBirthdays();
+    return birthdays
       .sort((first, second) => dayjs(first.birthDate).valueOf() - dayjs(second.birthDate).valueOf());
   }
 
-  create(input: BirthdayInput) {
+  async create(input: BirthdayInput) {
     const now = dayjs().toISOString();
     const birthday = buildBirthday(input, {
       id: createId('birthday'),
       createdAt: now,
     });
 
-    const birthdays = dataRepository.getBirthdays();
-    dataRepository.setBirthdays([birthday, ...birthdays]);
+    const birthdays = await dataRepository.getBirthdays();
+    await dataRepository.setBirthdays([birthday, ...birthdays]);
     return birthday;
   }
 
-  update(id: string, input: BirthdayInput) {
-    const birthdays = dataRepository.getBirthdays();
+  async update(id: string, input: BirthdayInput) {
+    const birthdays = await dataRepository.getBirthdays();
     const current = birthdays.find((entry) => entry.id === id);
     if (!current) {
       return null;
@@ -67,7 +67,7 @@ class BirthdaysService {
       createdAt: current.createdAt,
     });
 
-    dataRepository.setBirthdays(birthdays.map((entry) => (entry.id === id ? updated : entry)));
+    await dataRepository.setBirthdays(birthdays.map((entry) => (entry.id === id ? updated : entry)));
     return updated;
   }
 }

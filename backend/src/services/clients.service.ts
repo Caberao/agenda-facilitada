@@ -7,11 +7,12 @@ import { createId } from '../utils/id';
 type CreateClientInput = Pick<Client, 'name' | 'phone'> & Partial<Pick<Client, 'notes'>>;
 
 class ClientsService {
-  list() {
-    return [...dataRepository.getClients()].sort((first, second) => first.name.localeCompare(second.name));
+  async list() {
+    const clients = await dataRepository.getClients();
+    return [...clients].sort((first, second) => first.name.localeCompare(second.name));
   }
 
-  create(input: CreateClientInput): Client {
+  async create(input: CreateClientInput): Promise<Client> {
     const now = dayjs().toISOString();
     const notes = input.notes?.trim();
 
@@ -26,8 +27,8 @@ class ClientsService {
       client.notes = notes;
     }
 
-    const clients = dataRepository.getClients();
-    dataRepository.setClients([client, ...clients]);
+    const clients = await dataRepository.getClients();
+    await dataRepository.setClients([client, ...clients]);
 
     return client;
   }

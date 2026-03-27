@@ -3,12 +3,12 @@ import type { RegistrationProfile } from '../types/shared';
 import { dataRepository } from '../repositories';
 
 class RegistrationService {
-  get() {
+  async get() {
     return dataRepository.getRegistration();
   }
 
-  update(input: RegistrationProfile) {
-    const current = dataRepository.getRegistration();
+  async update(input: RegistrationProfile) {
+    const current = await dataRepository.getRegistration();
     const next: RegistrationProfile = {
       ...input,
       id: current.id,
@@ -17,7 +17,7 @@ class RegistrationService {
       address: { ...input.address },
     };
 
-    dataRepository.setRegistration(next);
+    await dataRepository.setRegistration(next);
     return dataRepository.getRegistration();
   }
 }

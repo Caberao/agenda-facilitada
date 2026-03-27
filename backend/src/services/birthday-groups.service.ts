@@ -6,11 +6,12 @@ import { createId } from '../utils/id';
 type BirthdayGroupInput = Omit<BirthdayGroup, 'id' | 'createdAt' | 'updatedAt'>;
 
 class BirthdayGroupsService {
-  list() {
-    return dataRepository.getBirthdayGroups().sort((a, b) => a.name.localeCompare(b.name));
+  async list() {
+    const groups = await dataRepository.getBirthdayGroups();
+    return groups.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  create(input: BirthdayGroupInput) {
+  async create(input: BirthdayGroupInput) {
     const now = dayjs().toISOString();
     const group: BirthdayGroup = {
       id: createId('bgroup'),
@@ -21,13 +22,13 @@ class BirthdayGroupsService {
       updatedAt: now,
     };
 
-    const groups = dataRepository.getBirthdayGroups();
-    dataRepository.setBirthdayGroups([group, ...groups]);
+    const groups = await dataRepository.getBirthdayGroups();
+    await dataRepository.setBirthdayGroups([group, ...groups]);
     return group;
   }
 
-  update(id: string, input: BirthdayGroupInput) {
-    const groups = dataRepository.getBirthdayGroups();
+  async update(id: string, input: BirthdayGroupInput) {
+    const groups = await dataRepository.getBirthdayGroups();
     const current = groups.find((item) => item.id === id);
     if (!current) {
       return null;
@@ -42,7 +43,7 @@ class BirthdayGroupsService {
       updatedAt: dayjs().toISOString(),
     };
 
-    dataRepository.setBirthdayGroups(groups.map((item) => (item.id === id ? updated : item)));
+    await dataRepository.setBirthdayGroups(groups.map((item) => (item.id === id ? updated : item)));
     return updated;
   }
 }

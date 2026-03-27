@@ -60,8 +60,8 @@ function buildAppointment(
 }
 
 class AppointmentsService {
-  list(filters?: AppointmentFilters) {
-    const appointments = dataRepository.getAppointments();
+  async list(filters?: AppointmentFilters) {
+    const appointments = await dataRepository.getAppointments();
 
     const filtered = appointments.filter((appointment) => {
       const matchesSearch = filters?.search
@@ -80,7 +80,7 @@ class AppointmentsService {
     return [...filtered].sort((first, second) => dayjs(first.scheduledAt).valueOf() - dayjs(second.scheduledAt).valueOf());
   }
 
-  create(input: AppointmentInput): Appointment {
+  async create(input: AppointmentInput): Promise<Appointment> {
     const now = dayjs().toISOString();
     const appointment = buildAppointment(input, {
       id: createId('appointment'),
@@ -88,14 +88,14 @@ class AppointmentsService {
       updatedAt: now,
     });
 
-    const appointments = dataRepository.getAppointments();
-    dataRepository.setAppointments([appointment, ...appointments]);
+    const appointments = await dataRepository.getAppointments();
+    await dataRepository.setAppointments([appointment, ...appointments]);
 
     return appointment;
   }
 
-  update(id: string, input: AppointmentInput): Appointment | null {
-    const appointments = dataRepository.getAppointments();
+  async update(id: string, input: AppointmentInput): Promise<Appointment | null> {
+    const appointments = await dataRepository.getAppointments();
     const current = appointments.find((appointment) => appointment.id === id);
 
     if (!current) {
@@ -108,25 +108,25 @@ class AppointmentsService {
       updatedAt: dayjs().toISOString(),
     });
 
-    dataRepository.setAppointments(appointments.map((appointment) => (appointment.id === id ? updated : appointment)));
+    await dataRepository.setAppointments(appointments.map((appointment) => (appointment.id === id ? updated : appointment)));
 
     return updated;
   }
 
-  remove(id: string): boolean {
-    const appointments = dataRepository.getAppointments();
+  async remove(id: string): Promise<boolean> {
+    const appointments = await dataRepository.getAppointments();
     const nextAppointments = appointments.filter((appointment) => appointment.id !== id);
 
     if (nextAppointments.length === appointments.length) {
       return false;
     }
 
-    dataRepository.setAppointments(nextAppointments);
+    await dataRepository.setAppointments(nextAppointments);
     return true;
   }
 
-  updateStatus(id: string, status: AppointmentStatus): Appointment | null {
-    const appointments = dataRepository.getAppointments();
+  async updateStatus(id: string, status: AppointmentStatus): Promise<Appointment | null> {
+    const appointments = await dataRepository.getAppointments();
     let updatedAppointment: Appointment | null = null;
 
     const nextAppointments = appointments.map((appointment) => {
@@ -147,7 +147,7 @@ class AppointmentsService {
       return null;
     }
 
-    dataRepository.setAppointments(nextAppointments);
+    await dataRepository.setAppointments(nextAppointments);
     return updatedAppointment;
   }
 }

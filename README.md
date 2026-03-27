@@ -176,6 +176,7 @@ If the backend seed is adjusted later, keep the README aligned with the values d
 - Provider switching is available via environment variables:
   - `DATA_PROVIDER=local` (default)
   - `DATA_PROVIDER=memory` (ephemeral)
+  - `DATA_PROVIDER=supabase` (Supabase runtime provider)
 
 The shared contracts already include a `PrismaPlannedModels` hint to guide a future database layer.
 
@@ -187,15 +188,17 @@ Create your backend environment file from `backend/.env.example` and adjust as n
 PORT=3333
 DATA_PROVIDER=local
 LOCAL_DB_PATH=.local-db/agenda-facilitada.json
-SUPABASE_URL=
+SUPABASE_URL=https://wyxtjkvhiwedkftfairg.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_SCHEMA=public
 ```
 
 Notes:
 
 - `local` mode is ready and recommended for portfolio preparation
-- Supabase tokens are only configured in `.env` for now
-- Supabase integration logic will be implemented in a next phase
+- Supabase URL and schema are already prepared
+- `SUPABASE_SERVICE_ROLE_KEY` is required for runtime access
+- Base SQL schema is available in `backend/supabase/schema.sql` for setup in Supabase SQL Editor
 
 ## PWA Support
 

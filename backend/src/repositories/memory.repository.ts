@@ -5,69 +5,69 @@ import { cloneSeedData } from './repository.types';
 export class MemoryRepository implements DataRepository {
   private data = cloneSeedData(seedData);
 
-  getUser() {
+  async getUser() {
     return { ...this.data.user };
   }
 
-  getSettings() {
+  async getSettings() {
     return { ...this.data.settings };
   }
 
-  setSettings(settings: typeof this.data.settings) {
+  async setSettings(settings: typeof this.data.settings) {
     this.data.settings = { ...settings };
   }
 
-  getRegistration() {
+  async getRegistration() {
     return {
       ...this.data.registration,
       address: { ...this.data.registration.address },
     };
   }
 
-  setRegistration(registration: typeof this.data.registration) {
+  async setRegistration(registration: typeof this.data.registration) {
     this.data.registration = {
       ...registration,
       address: { ...registration.address },
     };
   }
 
-  getAppointments() {
+  async getAppointments() {
     return this.data.appointments.map((appointment) => ({ ...appointment }));
   }
 
-  setAppointments(appointments: typeof this.data.appointments) {
+  async setAppointments(appointments: typeof this.data.appointments) {
     this.data.appointments = appointments.map((appointment) => ({ ...appointment }));
   }
 
-  getClients() {
+  async getClients() {
     return this.data.clients.map((client) => ({ ...client }));
   }
 
-  setClients(clients: typeof this.data.clients) {
+  async setClients(clients: typeof this.data.clients) {
     this.data.clients = clients.map((client) => ({ ...client }));
   }
 
-  getBirthdays() {
+  async getBirthdays() {
     return this.data.birthdays.map((birthday) => ({ ...birthday }));
   }
 
-  setBirthdays(birthdays: typeof this.data.birthdays) {
+  async setBirthdays(birthdays: typeof this.data.birthdays) {
     this.data.birthdays = birthdays.map((birthday) => ({ ...birthday }));
   }
 
-  getBirthdayGroups() {
+  async getBirthdayGroups() {
     return this.data.birthdayGroups.map((group) => ({ ...group }));
   }
 
-  setBirthdayGroups(groups: typeof this.data.birthdayGroups) {
+  async setBirthdayGroups(groups: typeof this.data.birthdayGroups) {
     this.data.birthdayGroups = groups.map((group) => ({ ...group }));
   }
 
-  getBirthdayBackgrounds() {
+  async getBirthdayBackgrounds() {
     return this.data.birthdayBackgrounds.map((background) => ({ ...background }));
   }
 
-  setBirthdayBackgrounds(backgrounds: typeof this.data.birthdayBackgrounds) {
+  async setBirthdayBackgrounds(backgrounds: typeof this.data.birthdayBackgrounds) {
     this.data.birthdayBackgrounds = backgrounds.map((background) => ({ ...background }));
   }
 }

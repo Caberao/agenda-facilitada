@@ -622,14 +622,14 @@ app.get('/health', (_request, response) => {
   response.json({ status: 'ok' });
 });
 
-app.post('/auth/login', (request, response) => {
+app.post('/auth/login', async (request, response) => {
   const payload = request.body as LoginPayload;
 
   if (!payload?.email || !payload?.password) {
     return sendError(response, 400, 'Email e senha são obrigatórios.');
   }
 
-  const loginResponse = authService.login(payload);
+  const loginResponse = await authService.login(payload);
 
   if (!loginResponse) {
     return sendError(response, 401, 'Credenciais inválidas.');
@@ -638,22 +638,22 @@ app.post('/auth/login', (request, response) => {
   return response.json(loginResponse);
 });
 
-app.get('/appointments', (request, response) => {
+app.get('/appointments', async (request, response) => {
   const filters = parseAppointmentFilters(request);
-  return response.json(appointmentsService.list(filters));
+  return response.json(await appointmentsService.list(filters));
 });
 
-app.post('/appointments', (request, response) => {
+app.post('/appointments', async (request, response) => {
   const parsed = parseAppointmentInput(request.body as Partial<Appointment>);
   if ('error' in parsed) {
     return sendError(response, 400, parsed.error);
   }
 
-  const appointment = appointmentsService.create(parsed.value);
+  const appointment = await appointmentsService.create(parsed.value);
   return response.status(201).json(appointment);
 });
 
-app.put('/appointments/:id', (request, response) => {
+app.put('/appointments/:id', async (request, response) => {
   const id = request.params.id;
   if (!id) {
     return sendError(response, 400, 'ID do agendamento é obrigatório.');
@@ -664,7 +664,7 @@ app.put('/appointments/:id', (request, response) => {
     return sendError(response, 400, parsed.error);
   }
 
-  const appointment = appointmentsService.update(id, parsed.value);
+  const appointment = await appointmentsService.update(id, parsed.value);
   if (!appointment) {
     return sendError(response, 404, 'Agendamento não encontrado.');
   }
@@ -672,13 +672,13 @@ app.put('/appointments/:id', (request, response) => {
   return response.json(appointment);
 });
 
-app.delete('/appointments/:id', (request, response) => {
+app.delete('/appointments/:id', async (request, response) => {
   const id = request.params.id;
   if (!id) {
     return sendError(response, 400, 'ID do agendamento é obrigatório.');
   }
 
-  const removed = appointmentsService.remove(id);
+  const removed = await appointmentsService.remove(id);
   if (!removed) {
     return sendError(response, 404, 'Agendamento não encontrado.');
   }
@@ -686,7 +686,7 @@ app.delete('/appointments/:id', (request, response) => {
   return response.status(204).send();
 });
 
-app.patch('/appointments/:id/status', (request, response) => {
+app.patch('/appointments/:id/status', async (request, response) => {
   const id = request.params.id;
   if (!id) {
     return sendError(response, 400, 'ID do agendamento é obrigatório.');
@@ -697,7 +697,7 @@ app.patch('/appointments/:id/status', (request, response) => {
     return sendError(response, 400, 'Status inválido.');
   }
 
-  const appointment = appointmentsService.updateStatus(id, payload.status);
+  const appointment = await appointmentsService.updateStatus(id, payload.status);
   if (!appointment) {
     return sendError(response, 404, 'Agendamento não encontrado.');
   }
@@ -705,11 +705,11 @@ app.patch('/appointments/:id/status', (request, response) => {
   return response.json(appointment);
 });
 
-app.get('/clients', (_request, response) => {
-  return response.json(clientsService.list());
+app.get('/clients', async (_request, response) => {
+  return response.json(await clientsService.list());
 });
 
-app.post('/clients', (request, response) => {
+app.post('/clients', async (request, response) => {
   const payload = request.body as { name?: string; phone?: string; notes?: string };
 
   if (!payload?.name || !payload?.phone) {
@@ -722,25 +722,25 @@ app.post('/clients', (request, response) => {
     ...(typeof payload.notes === 'string' ? { notes: payload.notes } : {}),
   };
 
-  const client = clientsService.create(createPayload);
+  const client = await clientsService.create(createPayload);
   return response.status(201).json(client);
 });
 
-app.get('/birthdays', (_request, response) => {
-  return response.json(birthdaysService.list());
+app.get('/birthdays', async (_request, response) => {
+  return response.json(await birthdaysService.list());
 });
 
-app.post('/birthdays', (request, response) => {
+app.post('/birthdays', async (request, response) => {
   const parsed = parseBirthdayInput(request.body as Partial<BirthdayContact>);
   if ('error' in parsed) {
     return sendError(response, 400, parsed.error);
   }
 
-  const birthday = birthdaysService.create(parsed.value);
+  const birthday = await birthdaysService.create(parsed.value);
   return response.status(201).json(birthday);
 });
 
-app.put('/birthdays/:id', (request, response) => {
+app.put('/birthdays/:id', async (request, response) => {
   const id = request.params.id;
   if (!id) {
     return sendError(response, 400, 'ID do aniversariante é obrigatório.');
@@ -751,7 +751,7 @@ app.put('/birthdays/:id', (request, response) => {
     return sendError(response, 400, parsed.error);
   }
 
-  const birthday = birthdaysService.update(id, parsed.value);
+  const birthday = await birthdaysService.update(id, parsed.value);
   if (!birthday) {
     return sendError(response, 404, 'Aniversariante não encontrado.');
   }
@@ -759,21 +759,21 @@ app.put('/birthdays/:id', (request, response) => {
   return response.json(birthday);
 });
 
-app.get('/birthday-groups', (_request, response) => {
-  return response.json(birthdayGroupsService.list());
+app.get('/birthday-groups', async (_request, response) => {
+  return response.json(await birthdayGroupsService.list());
 });
 
-app.post('/birthday-groups', (request, response) => {
+app.post('/birthday-groups', async (request, response) => {
   const parsed = parseBirthdayGroupInput(request.body as Partial<BirthdayGroup>);
   if ('error' in parsed) {
     return sendError(response, 400, parsed.error);
   }
 
-  const group = birthdayGroupsService.create(parsed.value);
+  const group = await birthdayGroupsService.create(parsed.value);
   return response.status(201).json(group);
 });
 
-app.put('/birthday-groups/:id', (request, response) => {
+app.put('/birthday-groups/:id', async (request, response) => {
   const id = request.params.id;
   if (!id) {
     return sendError(response, 400, 'ID do grupo é obrigatório.');
@@ -784,7 +784,7 @@ app.put('/birthday-groups/:id', (request, response) => {
     return sendError(response, 400, parsed.error);
   }
 
-  const group = birthdayGroupsService.update(id, parsed.value);
+  const group = await birthdayGroupsService.update(id, parsed.value);
   if (!group) {
     return sendError(response, 404, 'Grupo não encontrado.');
   }
@@ -792,21 +792,21 @@ app.put('/birthday-groups/:id', (request, response) => {
   return response.json(group);
 });
 
-app.get('/birthday-backgrounds', (_request, response) => {
-  return response.json(birthdayBackgroundsService.list());
+app.get('/birthday-backgrounds', async (_request, response) => {
+  return response.json(await birthdayBackgroundsService.list());
 });
 
-app.post('/birthday-backgrounds', (request, response) => {
+app.post('/birthday-backgrounds', async (request, response) => {
   const parsed = parseBirthdayBackgroundInput(request.body as Partial<BirthdayBackground>);
   if ('error' in parsed) {
     return sendError(response, 400, parsed.error);
   }
 
-  const background = birthdayBackgroundsService.create(parsed.value);
+  const background = await birthdayBackgroundsService.create(parsed.value);
   return response.status(201).json(background);
 });
 
-app.put('/birthday-backgrounds/:id', (request, response) => {
+app.put('/birthday-backgrounds/:id', async (request, response) => {
   const id = request.params.id;
   if (!id) {
     return sendError(response, 400, 'ID do fundo é obrigatório.');
@@ -817,7 +817,7 @@ app.put('/birthday-backgrounds/:id', (request, response) => {
     return sendError(response, 400, parsed.error);
   }
 
-  const background = birthdayBackgroundsService.update(id, parsed.value);
+  const background = await birthdayBackgroundsService.update(id, parsed.value);
   if (!background) {
     return sendError(response, 404, 'Fundo não encontrado.');
   }
@@ -825,23 +825,23 @@ app.put('/birthday-backgrounds/:id', (request, response) => {
   return response.json(background);
 });
 
-app.get('/settings', (_request, response) => {
-  return response.json(settingsService.get());
+app.get('/settings', async (_request, response) => {
+  return response.json(await settingsService.get());
 });
 
-app.put('/settings', (request, response) => {
+app.put('/settings', async (request, response) => {
   const parsed = parseSettingsInput(request.body as Partial<Settings>);
 
   if ('error' in parsed) {
     return sendError(response, 400, parsed.error);
   }
 
-  const settings = settingsService.update(parsed.value);
+  const settings = await settingsService.update(parsed.value);
   return response.json(settings);
 });
 
-app.get('/registration', (_request, response) => {
-  return response.json(registrationService.get());
+app.get('/registration', async (_request, response) => {
+  return response.json(await registrationService.get());
 });
 
 app.post('/registration/avatar', (request, response) => {
@@ -874,14 +874,14 @@ app.post('/uploads/image', (request, response) => {
   }
 });
 
-app.put('/registration', (request, response) => {
+app.put('/registration', async (request, response) => {
   const parsed = parseRegistrationInput(request.body as Partial<RegistrationProfile>);
 
   if ('error' in parsed) {
     return sendError(response, 400, parsed.error);
   }
 
-  const registration = registrationService.update(parsed.value);
+  const registration = await registrationService.update(parsed.value);
   return response.json(registration);
 });
 

@@ -11,24 +11,24 @@ import type {
 } from '../types/shared';
 
 export interface DataRepository {
-  getUser: () => User;
-  getSettings: () => Settings;
-  setSettings: (settings: Settings) => void;
-  getRegistration: () => RegistrationProfile;
-  setRegistration: (registration: RegistrationProfile) => void;
-  getAppointments: () => Appointment[];
-  setAppointments: (appointments: Appointment[]) => void;
-  getClients: () => Client[];
-  setClients: (clients: Client[]) => void;
-  getBirthdays: () => BirthdayContact[];
-  setBirthdays: (birthdays: BirthdayContact[]) => void;
-  getBirthdayGroups: () => BirthdayGroup[];
-  setBirthdayGroups: (groups: BirthdayGroup[]) => void;
-  getBirthdayBackgrounds: () => BirthdayBackground[];
-  setBirthdayBackgrounds: (backgrounds: BirthdayBackground[]) => void;
+  getUser: () => Promise<User>;
+  getSettings: () => Promise<Settings>;
+  setSettings: (settings: Settings) => Promise<void>;
+  getRegistration: () => Promise<RegistrationProfile>;
+  setRegistration: (registration: RegistrationProfile) => Promise<void>;
+  getAppointments: () => Promise<Appointment[]>;
+  setAppointments: (appointments: Appointment[]) => Promise<void>;
+  getClients: () => Promise<Client[]>;
+  setClients: (clients: Client[]) => Promise<void>;
+  getBirthdays: () => Promise<BirthdayContact[]>;
+  setBirthdays: (birthdays: BirthdayContact[]) => Promise<void>;
+  getBirthdayGroups: () => Promise<BirthdayGroup[]>;
+  setBirthdayGroups: (groups: BirthdayGroup[]) => Promise<void>;
+  getBirthdayBackgrounds: () => Promise<BirthdayBackground[]>;
+  setBirthdayBackgrounds: (backgrounds: BirthdayBackground[]) => Promise<void>;
 }
 
-export type DataProvider = 'local' | 'memory';
+export type DataProvider = 'local' | 'memory' | 'supabase';
 
 export interface RepositoryMeta {
   requestedProvider: DataProvider;

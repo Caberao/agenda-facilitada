@@ -3,14 +3,14 @@ import { adminCredentials } from '../data/seed';
 import { dataRepository } from '../repositories';
 
 class AuthService {
-  login(payload: LoginPayload): LoginResponse | null {
+  async login(payload: LoginPayload): Promise<LoginResponse | null> {
     const email = payload.email.trim().toLowerCase();
 
     if (email !== adminCredentials.email || payload.password !== adminCredentials.password) {
       return null;
     }
 
-    const user = dataRepository.getUser();
+    const user = await dataRepository.getUser();
 
     return {
       token: `demo-token-${user.id}`,
