@@ -32,3 +32,13 @@ SUPABASE_SCHEMA=public
 
 O provider `supabase` já está ativo em runtime no backend.
 Se faltar alguma variável (`SUPABASE_URL` ou `SUPABASE_SERVICE_ROLE_KEY`), o sistema volta para fallback local.
+
+## 6) Importar dados do JSON local para Supabase
+
+No terminal, dentro de `backend/`:
+
+```bash
+npm run supabase:import-local
+```
+
+O script lê `LOCAL_DB_PATH` (default: `.local-db/agenda-facilitada.json`) e grava tudo no Supabase.
