@@ -60,6 +60,11 @@ const defaultSettings: Settings = {
   defaultReminderMinutes: 30,
   compactMode: false,
   birthdaysModuleEnabled: true,
+  notificationEmail: 'admin@agendafacilitada.com',
+  notificationWhatsapp: '+55 11 98888-0000',
+  birthdayNotifyInApp: true,
+  birthdayNotifyEmail: false,
+  birthdayNotifyWhatsapp: false,
 };
 
 const storageKeys = {

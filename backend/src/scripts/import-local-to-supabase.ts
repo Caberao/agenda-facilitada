@@ -300,6 +300,11 @@ async function run() {
         default_reminder_minutes: snapshot.settings.defaultReminderMinutes,
         compact_mode: snapshot.settings.compactMode,
         birthdays_module_enabled: snapshot.settings.birthdaysModuleEnabled,
+        notification_email: snapshot.settings.notificationEmail,
+        notification_whatsapp: snapshot.settings.notificationWhatsapp,
+        birthday_notify_in_app: snapshot.settings.birthdayNotifyInApp,
+        birthday_notify_email: snapshot.settings.birthdayNotifyEmail,
+        birthday_notify_whatsapp: snapshot.settings.birthdayNotifyWhatsapp,
       },
       { onConflict: 'id' },
     );

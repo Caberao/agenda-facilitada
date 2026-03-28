@@ -23,6 +23,11 @@ export const seedData: SeedData = {
     defaultReminderMinutes: 60,
     compactMode: false,
     birthdaysModuleEnabled: true,
+    notificationEmail: 'admin@agendafacilitada.com',
+    notificationWhatsapp: '+55 11 98888-0000',
+    birthdayNotifyInApp: true,
+    birthdayNotifyEmail: false,
+    birthdayNotifyWhatsapp: false,
   },
   registration: {
     id: 'registration_admin_1',

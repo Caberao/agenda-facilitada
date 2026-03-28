@@ -113,6 +113,11 @@ export interface Settings {
   defaultReminderMinutes: number
   compactMode: boolean
   birthdaysModuleEnabled: boolean
+  notificationEmail: string
+  notificationWhatsapp: string
+  birthdayNotifyInApp: boolean
+  birthdayNotifyEmail: boolean
+  birthdayNotifyWhatsapp: boolean
 }
 
 export type RegistrationType = 'pf' | 'pj'
@@ -174,6 +179,19 @@ export interface LoginPayload {
 export interface LoginResponse {
   token: string
   user: User
+}
+
+export interface BirthdayNotificationTestResponse {
+  processedDate: string
+  totalBirthdays: number
+  inAppSent: boolean
+  emailSent: boolean
+  whatsappSent: boolean
+  targets: {
+    email: string | null
+    whatsapp: string | null
+  }
+  sampleNames: string[]
 }
 
 export interface AppointmentFilters {

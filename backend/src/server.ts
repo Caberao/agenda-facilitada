@@ -12,6 +12,7 @@ import { birthdaysService } from './services/birthdays.service';
 import { clientsService } from './services/clients.service';
 import { registrationService } from './services/registration.service';
 import { settingsService } from './services/settings.service';
+import { notificationsService } from './services/notifications.service';
 import { sendError } from './utils/http';
 import { uploadAssetBufferToSupabase } from './utils/supabase-storage';
 import type {
@@ -299,6 +300,26 @@ function parseSettingsInput(body: Partial<Settings>) {
     return { error: 'Campo "birthdaysModuleEnabled" é obrigatório.' };
   }
 
+  if (typeof body.notificationEmail !== 'string') {
+    return { error: 'Campo "notificationEmail" é obrigatório.' };
+  }
+
+  if (typeof body.notificationWhatsapp !== 'string') {
+    return { error: 'Campo "notificationWhatsapp" é obrigatório.' };
+  }
+
+  if (typeof body.birthdayNotifyInApp !== 'boolean') {
+    return { error: 'Campo "birthdayNotifyInApp" é obrigatório.' };
+  }
+
+  if (typeof body.birthdayNotifyEmail !== 'boolean') {
+    return { error: 'Campo "birthdayNotifyEmail" é obrigatório.' };
+  }
+
+  if (typeof body.birthdayNotifyWhatsapp !== 'boolean') {
+    return { error: 'Campo "birthdayNotifyWhatsapp" é obrigatório.' };
+  }
+
   const settings: Settings = {
     businessName: body.businessName.trim(),
     theme: body.theme,
@@ -306,6 +327,11 @@ function parseSettingsInput(body: Partial<Settings>) {
     defaultReminderMinutes: Math.max(0, body.defaultReminderMinutes),
     compactMode: body.compactMode,
     birthdaysModuleEnabled: body.birthdaysModuleEnabled,
+    notificationEmail: body.notificationEmail.trim(),
+    notificationWhatsapp: body.notificationWhatsapp.trim(),
+    birthdayNotifyInApp: body.birthdayNotifyInApp,
+    birthdayNotifyEmail: body.birthdayNotifyEmail,
+    birthdayNotifyWhatsapp: body.birthdayNotifyWhatsapp,
   };
 
   return { value: settings };
@@ -839,6 +865,12 @@ app.put('/settings', async (request, response) => {
 
   const settings = await settingsService.update(parsed.value);
   return response.json(settings);
+});
+
+app.post('/notifications/birthdays/test', async (request, response) => {
+  const payload = request.body as { date?: string } | undefined;
+  const result = await notificationsService.testBirthdayNotifications(payload?.date);
+  return response.json(result);
 });
 
 app.get('/registration', async (_request, response) => {

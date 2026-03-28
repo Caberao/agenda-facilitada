@@ -242,6 +242,7 @@ This project is ideal for demonstrating:
 Planned next steps for the product:
 
 - WhatsApp reminder and confirmation flows
+- Birthday notifications in-app + email/WhatsApp with direct quick-access link
 - shared calendar integrations
 - complete client management module
 - persistent database migration
@@ -250,6 +251,7 @@ Planned next steps for the product:
 - optional Supabase backend for hosted environments
 - analytics and business performance insights
 - richer notification preferences
+- mobile-first notification UX tuning (compact banner, tap actions, and channel setup)
 - multi-user roles and team scheduling
 
 ## Recommended Screenshots for GitHub

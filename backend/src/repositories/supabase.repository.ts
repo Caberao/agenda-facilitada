@@ -118,6 +118,11 @@ type DbSettings = {
   default_reminder_minutes: number;
   compact_mode: boolean;
   birthdays_module_enabled: boolean;
+  notification_email: string;
+  notification_whatsapp: string;
+  birthday_notify_in_app: boolean;
+  birthday_notify_email: boolean;
+  birthday_notify_whatsapp: boolean;
 };
 
 type DbUser = {
@@ -351,6 +356,11 @@ function settingsToDb(item: Settings): DbSettings {
     default_reminder_minutes: item.defaultReminderMinutes,
     compact_mode: item.compactMode,
     birthdays_module_enabled: item.birthdaysModuleEnabled,
+    notification_email: item.notificationEmail,
+    notification_whatsapp: item.notificationWhatsapp,
+    birthday_notify_in_app: item.birthdayNotifyInApp,
+    birthday_notify_email: item.birthdayNotifyEmail,
+    birthday_notify_whatsapp: item.birthdayNotifyWhatsapp,
   };
 }
 
@@ -362,6 +372,11 @@ function settingsFromDb(item: DbSettings): Settings {
     defaultReminderMinutes: item.default_reminder_minutes,
     compactMode: item.compact_mode,
     birthdaysModuleEnabled: item.birthdays_module_enabled,
+    notificationEmail: item.notification_email,
+    notificationWhatsapp: item.notification_whatsapp,
+    birthdayNotifyInApp: item.birthday_notify_in_app,
+    birthdayNotifyEmail: item.birthday_notify_email,
+    birthdayNotifyWhatsapp: item.birthday_notify_whatsapp,
   };
 }
 

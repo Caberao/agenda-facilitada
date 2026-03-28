@@ -1,7 +1,7 @@
 import { Cake, CalendarDays, LayoutDashboard, LogOut, Menu, Settings2, ShieldCheck, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { getRegistrationRequest, resolveApiAssetUrl } from '../../lib/api';
+import { getRegistrationRequest, listBirthdaysRequest, resolveApiAssetUrl } from '../../lib/api';
 import type { WorkspaceTabRequest } from '../../lib/workspace-tabs';
 import { useAppStore } from '../../store/app-store';
 
@@ -19,6 +19,8 @@ export function AppShell() {
   const location = useLocation();
   const user = useAppStore((state) => state.user);
   const birthdaysModuleEnabled = useAppStore((state) => state.settings.birthdaysModuleEnabled);
+  const notificationsEnabled = useAppStore((state) => state.settings.notificationsEnabled);
+  const birthdayNotifyInApp = useAppStore((state) => state.settings.birthdayNotifyInApp);
   const mobileNavOpen = useAppStore((state) => state.mobileNavOpen);
   const toggleMobileNav = useAppStore((state) => state.toggleMobileNav);
   const logout = useAppStore((state) => state.logout);
@@ -39,6 +41,7 @@ export function AppShell() {
   );
   const [profileName, setProfileName] = useState<string | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [todayBirthdaysCount, setTodayBirthdaysCount] = useState(0);
 
   const initials = useMemo(() => {
     const source = profileName || user?.name || 'AF';
@@ -75,6 +78,39 @@ export function AppShell() {
       window.removeEventListener('registration-updated', handleRegistrationUpdated);
     };
   }, []);
+
+  useEffect(() => {
+    async function loadTodayBirthdays() {
+      if (!birthdaysModuleEnabled || !notificationsEnabled || !birthdayNotifyInApp) {
+        setTodayBirthdaysCount(0);
+        return;
+      }
+
+      try {
+        const birthdays = await listBirthdaysRequest();
+        const now = new Date();
+        const todayMonth = now.getMonth() + 1;
+        const todayDay = now.getDate();
+
+        const count = birthdays.filter((entry) => {
+          const parts = entry.birthDate.split('-');
+          if (parts.length !== 3) {
+            return false;
+          }
+
+          const month = Number(parts[1]);
+          const day = Number(parts[2]);
+          return month === todayMonth && day === todayDay && entry.active;
+        }).length;
+
+        setTodayBirthdaysCount(count);
+      } catch {
+        setTodayBirthdaysCount(0);
+      }
+    }
+
+    void loadTodayBirthdays();
+  }, [birthdaysModuleEnabled, notificationsEnabled, birthdayNotifyInApp, location.pathname]);
 
   useEffect(() => {
     const shouldResetTabs = sessionStorage.getItem('agenda_reset_tabs_after_login') === '1';
@@ -250,6 +286,26 @@ export function AppShell() {
         </header>
 
         <section className="workspace-canvas">
+          {todayBirthdaysCount > 0 ? (
+            <article className="workspace-alert" role="status" aria-live="polite">
+              <div>
+                <strong>Hoje tem aniversariante</strong>
+                <p>
+                  {todayBirthdaysCount} contato(s) fazem aniversário hoje. Abra o envio em lote para mandar rápido.
+                </p>
+              </div>
+              <button
+                className="button button--primary"
+                type="button"
+                onClick={() => {
+                  openTab('/birthdays/batch', 'Aniversários · Envio em lote');
+                  navigate('/birthdays/batch');
+                }}
+              >
+                Abrir envio em lote
+              </button>
+            </article>
+          ) : null}
           <Outlet />
         </section>
       </main>

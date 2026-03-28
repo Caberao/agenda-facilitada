@@ -17,8 +17,19 @@ create table if not exists public.app_settings (
   notifications_enabled boolean not null default true,
   default_reminder_minutes integer not null default 60 check (default_reminder_minutes >= 0),
   compact_mode boolean not null default false,
-  birthdays_module_enabled boolean not null default true
+  birthdays_module_enabled boolean not null default true,
+  notification_email text not null default '',
+  notification_whatsapp text not null default '',
+  birthday_notify_in_app boolean not null default true,
+  birthday_notify_email boolean not null default false,
+  birthday_notify_whatsapp boolean not null default false
 );
+
+alter table public.app_settings add column if not exists notification_email text not null default '';
+alter table public.app_settings add column if not exists notification_whatsapp text not null default '';
+alter table public.app_settings add column if not exists birthday_notify_in_app boolean not null default true;
+alter table public.app_settings add column if not exists birthday_notify_email boolean not null default false;
+alter table public.app_settings add column if not exists birthday_notify_whatsapp boolean not null default false;
 
 create table if not exists public.registration_profiles (
   id text primary key,
@@ -130,7 +141,12 @@ insert into public.app_settings (
   notifications_enabled,
   default_reminder_minutes,
   compact_mode,
-  birthdays_module_enabled
+  birthdays_module_enabled,
+  notification_email,
+  notification_whatsapp,
+  birthday_notify_in_app,
+  birthday_notify_email,
+  birthday_notify_whatsapp
 )
 values (
   'app_settings',
@@ -139,7 +155,12 @@ values (
   true,
   60,
   false,
-  true
+  true,
+  'admin@agendafacilitada.com',
+  '+55 11 98888-0000',
+  true,
+  false,
+  false
 )
 on conflict (id) do update set
   business_name = excluded.business_name,
@@ -147,4 +168,9 @@ on conflict (id) do update set
   notifications_enabled = excluded.notifications_enabled,
   default_reminder_minutes = excluded.default_reminder_minutes,
   compact_mode = excluded.compact_mode,
-  birthdays_module_enabled = excluded.birthdays_module_enabled;
+  birthdays_module_enabled = excluded.birthdays_module_enabled,
+  notification_email = excluded.notification_email,
+  notification_whatsapp = excluded.notification_whatsapp,
+  birthday_notify_in_app = excluded.birthday_notify_in_app,
+  birthday_notify_email = excluded.birthday_notify_email,
+  birthday_notify_whatsapp = excluded.birthday_notify_whatsapp;

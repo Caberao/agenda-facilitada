@@ -7,6 +7,7 @@ export type {
   BirthdayBackgroundLayout,
   BirthdayContact,
   BirthdayGroup,
+  BirthdayNotificationTestResponse,
   Client,
   DashboardSummary,
   LoginPayload,

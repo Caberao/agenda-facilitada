@@ -5,6 +5,7 @@ import type {
   BirthdayBackground,
   BirthdayContact,
   BirthdayGroup,
+  BirthdayNotificationTestResponse,
   Client,
   LoginPayload,
   LoginResponse,
@@ -229,5 +230,12 @@ export function uploadImageAssetRequest(payload: { fileName: string; mimeType: s
   return request<{ assetUrl: string }>('/uploads/image', {
     method: 'POST',
     body: payload,
+  });
+}
+
+export function triggerBirthdayNotificationsTestRequest(payload?: { date?: string }) {
+  return request<BirthdayNotificationTestResponse>('/notifications/birthdays/test', {
+    method: 'POST',
+    body: payload || {},
   });
 }
