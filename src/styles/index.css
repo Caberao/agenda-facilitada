@@ -2204,6 +2204,22 @@ h1 {
   margin-bottom: 10px;
 }
 
+.admin-access-card__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-quick-toggle {
+  min-height: 34px;
+  padding-inline: 10px;
+  font-size: 12px;
+}
+
+.admin-quick-toggle.is-active {
+  --button-text: color-mix(in srgb, var(--brand) 80%, #124a45);
+}
+
 .admin-access-card__header h3 {
   display: inline-flex;
   align-items: center;
@@ -2493,6 +2509,16 @@ h1 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .admin-access-card__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-access-card__header-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
   .birthdays-hub {
     grid-template-columns: 1fr;
   }
@@ -2730,6 +2756,11 @@ h1 {
 
   .admin-access-card__fields {
     grid-template-columns: 1fr;
+  }
+
+  .admin-access-card__header-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
   }
 }
 

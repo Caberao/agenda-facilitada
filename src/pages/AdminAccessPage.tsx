@@ -70,6 +70,19 @@ export function AdminAccessPage() {
     setUsers((current) => current.filter((item) => item.id !== id));
   }
 
+  function toggleAdminAccess(user: ManagedAccessUser) {
+    if (user.role === 'owner') {
+      updateUser(user.id, { role: 'operator' });
+      return;
+    }
+
+    updateUser(user.id, {
+      role: 'owner',
+      active: true,
+      maxSubUsers: Math.max(user.maxSubUsers, 2),
+    });
+  }
+
   function saveUsers() {
     if (hasErrors) {
       setToastType('error');
@@ -136,10 +149,19 @@ export function AdminAccessPage() {
                 <UserCog size={16} />
                 Usuário
               </h3>
-              <button className="button button--danger" type="button" onClick={() => removeUser(user.id)}>
-                <Trash2 size={14} />
-                Remover
-              </button>
+              <div className="admin-access-card__header-actions">
+                <button
+                  className={user.role === 'owner' ? 'button button--primary admin-quick-toggle is-active' : 'button button--ghost admin-quick-toggle'}
+                  type="button"
+                  onClick={() => toggleAdminAccess(user)}
+                >
+                  {user.role === 'owner' ? 'Acesso Admin: ON' : 'Acesso Admin: OFF'}
+                </button>
+                <button className="button button--danger" type="button" onClick={() => removeUser(user.id)}>
+                  <Trash2 size={14} />
+                  Remover
+                </button>
+              </div>
             </header>
 
             <div className="admin-access-card__fields">

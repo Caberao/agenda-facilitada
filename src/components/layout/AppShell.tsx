@@ -1,4 +1,4 @@
-import { Cake, CalendarDays, LayoutDashboard, LogOut, Menu, PlugZap, Settings2, ShieldCheck, X } from 'lucide-react';
+import { Cake, CalendarDays, LayoutDashboard, LogOut, Menu, Settings2, ShieldCheck, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getRegistrationRequest, resolveApiAssetUrl } from '../../lib/api';
@@ -8,8 +8,7 @@ import { useAppStore } from '../../store/app-store';
 const baseNavLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/appointments', label: 'Agenda', icon: CalendarDays },
-  { to: '/admin/integrations', label: 'Integrações', icon: PlugZap },
-  { to: '/admin/access', label: 'Admin de acessos', icon: ShieldCheck },
+  { to: '/admin', label: 'Administração', icon: ShieldCheck },
   { to: '/settings', label: 'Configurações', icon: Settings2 },
 ];
 
@@ -24,12 +23,16 @@ export function AppShell() {
   const toggleMobileNav = useAppStore((state) => state.toggleMobileNav);
   const logout = useAppStore((state) => state.logout);
   const navLinks = useMemo(() => {
+    const canSeeAdmin = user?.role === 'admin';
+    const linksWithoutAdmin = baseNavLinks.filter((link) => link.to !== '/admin');
+    const rootLinks = canSeeAdmin ? baseNavLinks : linksWithoutAdmin;
+
     if (!birthdaysModuleEnabled) {
-      return baseNavLinks;
+      return rootLinks;
     }
 
-    return [baseNavLinks[0], baseNavLinks[1], birthdaysNavLink, ...baseNavLinks.slice(2)];
-  }, [birthdaysModuleEnabled]);
+    return [rootLinks[0], rootLinks[1], birthdaysNavLink, ...rootLinks.slice(2)];
+  }, [birthdaysModuleEnabled, user?.role]);
   const initialTab = resolveTabFromPath(location.pathname, navLinks);
   const [tabs, setTabs] = useState<Array<{ path: string; label: string }>>(() =>
     initialTab ? [{ path: initialTab.path, label: initialTab.label }] : [],
@@ -284,16 +287,16 @@ function resolveTabFromPath(pathname: string, navLinks: Array<{ to: string; labe
     return { path: pathname, label: 'Aniversários · Envio em lote' };
   }
 
-  if (pathname === '/birthdays/templates') {
-    return { path: pathname, label: 'Aniversários · Templates' };
-  }
-
   if (pathname === '/registration') {
     return { path: pathname, label: 'Cadastro' };
   }
 
   if (pathname === '/settings') {
     return { path: pathname, label: 'Configurações' };
+  }
+
+  if (pathname === '/admin') {
+    return { path: pathname, label: 'Administração' };
   }
 
   if (pathname === '/admin/access') {

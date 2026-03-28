@@ -1,4 +1,4 @@
-import { Brush, ContactRound, FolderTree, Send, MessagesSquare } from 'lucide-react';
+import { Brush, ContactRound, FolderTree, Send } from 'lucide-react';
 import { requestWorkspaceTab } from '../lib/workspace-tabs';
 
 const modules = [
@@ -30,13 +30,6 @@ const modules = [
     label: 'Aniversários · Envio em lote',
     icon: Send,
   },
-  {
-    title: 'Templates',
-    description: 'Monte modelos de texto e imagem para felicitações.',
-    path: '/birthdays/templates',
-    label: 'Aniversários · Templates',
-    icon: MessagesSquare,
-  },
 ];
 
 export function BirthdaysHubPage() {
@@ -44,7 +37,7 @@ export function BirthdaysHubPage() {
     <section className="page">
       <header className="page__header">
         <h2>Aniversariantes</h2>
-        <p>Escolha um módulo para continuar: contatos, fundos, grupos ou templates.</p>
+        <p>Escolha um módulo para continuar: contatos, fundos, grupos ou envio em lote.</p>
       </header>
 
       <article className="card birthdays-hub">
