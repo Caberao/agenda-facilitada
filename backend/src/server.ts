@@ -13,6 +13,7 @@ import { clientsService } from './services/clients.service';
 import { registrationService } from './services/registration.service';
 import { settingsService } from './services/settings.service';
 import { sendError } from './utils/http';
+import { uploadAssetBufferToSupabase } from './utils/supabase-storage';
 import type {
   Appointment,
   AppointmentFilters,
@@ -852,6 +853,19 @@ app.post('/registration/avatar', (request, response) => {
   }
 
   try {
+    if (repositoryMeta.activeProvider === 'supabase') {
+      uploadAssetBufferToSupabase({
+        fileName: parsed.value.filePath.split(/[\\/]/).pop() || 'avatar.png',
+        buffer: parsed.value.buffer,
+        folder: 'avatars',
+      })
+        .then((assetUrl) => response.status(201).json({ avatarUrl: assetUrl }))
+        .catch((error: unknown) =>
+          sendError(response, 500, error instanceof Error ? error.message : 'Falha ao enviar avatar para Supabase.'),
+        );
+      return;
+    }
+
     writeFileSync(parsed.value.filePath, parsed.value.buffer);
     return response.status(201).json(parsed.value.responsePayload);
   } catch {
@@ -867,6 +881,19 @@ app.post('/uploads/image', (request, response) => {
   }
 
   try {
+    if (repositoryMeta.activeProvider === 'supabase') {
+      uploadAssetBufferToSupabase({
+        fileName: parsed.value.filePath.split(/[\\/]/).pop() || 'image.png',
+        buffer: parsed.value.buffer,
+        folder: 'images',
+      })
+        .then((assetUrl) => response.status(201).json({ assetUrl }))
+        .catch((error: unknown) =>
+          sendError(response, 500, error instanceof Error ? error.message : 'Falha ao enviar imagem para Supabase.'),
+        );
+      return;
+    }
+
     writeFileSync(parsed.value.filePath, parsed.value.buffer);
     return response.status(201).json({ assetUrl: parsed.value.assetUrl });
   } catch {

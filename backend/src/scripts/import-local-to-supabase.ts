@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, extname, resolve } from 'node:path';
 import type { SeedData } from '../types/shared';
+import { uploadAssetBufferToSupabase } from '../utils/supabase-storage';
 
 function loadEnvFromFile(filePath: string) {
   if (!existsSync(filePath)) {
@@ -49,6 +50,58 @@ function readLocalSnapshot(filePath: string) {
   return JSON.parse(raw) as SeedData;
 }
 
+function looksLikeLocalUploadPath(input: string | undefined) {
+  if (!input) {
+    return false;
+  }
+
+  return input.startsWith('/uploads/') || input.startsWith('uploads/');
+}
+
+function resolveUploadFileFromAssetPath(localDbPath: string, assetPath: string) {
+  const uploadsDir = resolve(dirname(localDbPath), 'uploads');
+  const relativeName = assetPath.replace(/^\/+/, '').replace(/^uploads\//, '');
+  return resolve(uploadsDir, relativeName);
+}
+
+function getMimeType(filePath: string) {
+  const extension = extname(filePath).toLowerCase();
+  if (extension === '.jpg' || extension === '.jpeg') {
+    return 'image/jpeg';
+  }
+  if (extension === '.png') {
+    return 'image/png';
+  }
+  if (extension === '.webp') {
+    return 'image/webp';
+  }
+  if (extension === '.gif') {
+    return 'image/gif';
+  }
+
+  return 'application/octet-stream';
+}
+
+async function uploadLocalAssetIfNeeded(localDbPath: string, assetPath: string | undefined, folder: string) {
+  if (!looksLikeLocalUploadPath(assetPath)) {
+    return assetPath;
+  }
+
+  const resolvedFile = resolveUploadFileFromAssetPath(localDbPath, assetPath as string);
+  if (!existsSync(resolvedFile)) {
+    return assetPath;
+  }
+
+  const buffer = readFileSync(resolvedFile);
+  const fileName = resolvedFile.split(/[\\/]/).pop() || `asset-${Date.now()}`;
+  return uploadAssetBufferToSupabase({
+    fileName,
+    buffer,
+    mimeType: getMimeType(resolvedFile),
+    folder,
+  });
+}
+
 async function clearTable(client: any, table: string) {
   const { error } = await client.from(table).delete().neq('id', '__none__');
   if (error) {
@@ -68,6 +121,20 @@ async function run() {
   const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+
+  const registrationAvatarUrl = await uploadLocalAssetIfNeeded(localDbPath, snapshot.registration.avatarUrl, 'avatars');
+  const birthdaysPhotoUrlMap = new Map<string, string | undefined>();
+  const backgroundsImageUrlMap = new Map<string, string | undefined>();
+
+  for (const birthday of snapshot.birthdays) {
+    const uploaded = await uploadLocalAssetIfNeeded(localDbPath, birthday.photoUrl, 'images');
+    birthdaysPhotoUrlMap.set(birthday.id, uploaded);
+  }
+
+  for (const background of snapshot.birthdayBackgrounds) {
+    const uploaded = await uploadLocalAssetIfNeeded(localDbPath, background.imageUrl, 'backgrounds');
+    backgroundsImageUrlMap.set(background.id, uploaded);
+  }
 
   await clearTable(supabase, 'appointments');
   await clearTable(supabase, 'clients');
@@ -145,7 +212,7 @@ async function run() {
         whatsapp: item.whatsapp,
         birth_date: item.birthDate,
         group_id: item.groupId ?? null,
-        photo_url: item.photoUrl ?? null,
+        photo_url: birthdaysPhotoUrlMap.get(item.id) ?? item.photoUrl ?? null,
         notes: item.notes ?? null,
         message_template: item.messageTemplate ?? null,
         source: item.source,
@@ -165,7 +232,7 @@ async function run() {
       snapshot.birthdayBackgrounds.map((item) => ({
         id: item.id,
         name: item.name,
-        image_url: item.imageUrl,
+        image_url: backgroundsImageUrlMap.get(item.id) ?? item.imageUrl,
         scope: item.scope,
         group_id: item.groupId ?? null,
         photo_mask_shape: item.photoMaskShape ?? 'circle',
@@ -190,7 +257,7 @@ async function run() {
         full_name: snapshot.registration.fullName ?? null,
         company_name: snapshot.registration.companyName ?? null,
         trade_name: snapshot.registration.tradeName ?? null,
-        avatar_url: snapshot.registration.avatarUrl ?? null,
+        avatar_url: registrationAvatarUrl ?? snapshot.registration.avatarUrl ?? null,
         cpf: snapshot.registration.cpf ?? null,
         cnpj: snapshot.registration.cnpj ?? null,
         email: snapshot.registration.email,

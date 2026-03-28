@@ -3,6 +3,7 @@ import { AppShell } from '../components/layout/AppShell';
 import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 import { ThemeEffect } from './theme-effect';
 import { HomePage } from '../pages/HomePage';
+import { AdminAccessPage } from '../pages/AdminAccessPage';
 import { LoginPage } from '../pages/LoginPage';
 import { RegistrationPage } from '../pages/RegistrationPage';
 import { AppointmentsPage } from '../pages/AppointmentsPage';
@@ -21,7 +22,7 @@ export function AppRouter() {
     <>
       <ThemeEffect />
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route
           element={
@@ -42,8 +43,10 @@ export function AppRouter() {
           <Route path="/birthdays/templates" element={<BirthdayTemplatesPage />} />
           <Route path="/registration" element={<RegistrationPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/admin/integrations" element={<HomePage />} />
+          <Route path="/admin/access" element={<AdminAccessPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </>
   );

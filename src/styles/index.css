@@ -2184,6 +2184,39 @@ h1 {
   gap: 10px;
 }
 
+.admin-access-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.admin-access-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  background: color-mix(in srgb, var(--surface-strong) 96%, transparent);
+}
+
+.admin-access-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.admin-access-card__header h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 15px;
+}
+
+.admin-access-card__fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
 .button:disabled {
   cursor: not-allowed;
   opacity: 0.75;
@@ -2456,6 +2489,10 @@ h1 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .admin-access-card__fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .birthdays-hub {
     grid-template-columns: 1fr;
   }
@@ -2689,6 +2726,10 @@ h1 {
 
   .actions {
     flex-direction: column-reverse;
+  }
+
+  .admin-access-card__fields {
+    grid-template-columns: 1fr;
   }
 }
 

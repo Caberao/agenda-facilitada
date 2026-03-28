@@ -1,5 +1,4 @@
 import { CalendarDays, CheckCircle2, Clock3, Smartphone } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const highlights = [
   {
@@ -29,20 +28,11 @@ export function HomePage() {
     <section className="home-page">
       <header className="home-hero">
         <div className="home-hero__content">
-          <p className="home-hero__eyebrow">Agenda Facilitada</p>
-          <h1>Gestao de atendimentos com visual premium e fluxo objetivo</h1>
+          <p className="home-hero__eyebrow">Admin • Integracoes</p>
+          <h1>Centro de integracoes e status do ambiente</h1>
           <p className="home-hero__subtitle">
-            Projeto full stack em TypeScript, pronto para portifolio agora e com tokens do Supabase já mapeados no
-            .env para a próxima fase.
+            Esta tela fica dedicada ao acompanhamento técnico: deploy, API, banco e integrações da operação.
           </p>
-          <div className="home-hero__actions">
-            <Link className="button button--primary" to="/login">
-              Entrar no painel
-            </Link>
-            <Link className="button button--ghost" to="/dashboard">
-              Ver dashboard
-            </Link>
-          </div>
         </div>
         <article className="home-hero__panel">
           <p className="home-hero__panel-title">Status do projeto</p>
@@ -57,11 +47,11 @@ export function HomePage() {
             </li>
             <li>
               <span>Banco local</span>
-              <strong>pronto</strong>
+              <strong>fallback</strong>
             </li>
             <li>
               <span>Supabase</span>
-              <strong>em espera</strong>
+              <strong>ativo</strong>
             </li>
           </ul>
         </article>

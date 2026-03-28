@@ -1,4 +1,4 @@
-import { Cake, CalendarDays, LayoutDashboard, LogOut, Menu, Settings2, X } from 'lucide-react';
+import { Cake, CalendarDays, LayoutDashboard, LogOut, Menu, PlugZap, Settings2, ShieldCheck, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { getRegistrationRequest, resolveApiAssetUrl } from '../../lib/api';
@@ -8,6 +8,8 @@ import { useAppStore } from '../../store/app-store';
 const baseNavLinks = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/appointments', label: 'Agenda', icon: CalendarDays },
+  { to: '/admin/integrations', label: 'Integrações', icon: PlugZap },
+  { to: '/admin/access', label: 'Admin de acessos', icon: ShieldCheck },
   { to: '/settings', label: 'Configurações', icon: Settings2 },
 ];
 
@@ -21,10 +23,13 @@ export function AppShell() {
   const mobileNavOpen = useAppStore((state) => state.mobileNavOpen);
   const toggleMobileNav = useAppStore((state) => state.toggleMobileNav);
   const logout = useAppStore((state) => state.logout);
-  const navLinks = useMemo(
-    () => (birthdaysModuleEnabled ? [...baseNavLinks.slice(0, 2), birthdaysNavLink, baseNavLinks[2]] : baseNavLinks),
-    [birthdaysModuleEnabled],
-  );
+  const navLinks = useMemo(() => {
+    if (!birthdaysModuleEnabled) {
+      return baseNavLinks;
+    }
+
+    return [baseNavLinks[0], baseNavLinks[1], birthdaysNavLink, ...baseNavLinks.slice(2)];
+  }, [birthdaysModuleEnabled]);
   const initialTab = resolveTabFromPath(location.pathname, navLinks);
   const [tabs, setTabs] = useState<Array<{ path: string; label: string }>>(() =>
     initialTab ? [{ path: initialTab.path, label: initialTab.label }] : [],
@@ -289,6 +294,14 @@ function resolveTabFromPath(pathname: string, navLinks: Array<{ to: string; labe
 
   if (pathname === '/settings') {
     return { path: pathname, label: 'Configurações' };
+  }
+
+  if (pathname === '/admin/access') {
+    return { path: pathname, label: 'Admin de acessos' };
+  }
+
+  if (pathname === '/admin/integrations') {
+    return { path: pathname, label: 'Admin · Integrações' };
   }
 
   return null;
