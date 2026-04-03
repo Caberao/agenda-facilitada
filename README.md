@@ -149,13 +149,21 @@ VITE_API_URL=http://localhost:3333
 
 Then run backend and frontend together in separate terminals.
 
-### Local temporary database (current default)
+### Backend data providers
+
+The backend supports 3 providers:
+
+- `local` (default, JSON file)
+- `memory` (ephemeral)
+- `supabase` (remote Postgres via Supabase)
+
+### Local temporary database (default for portfolio)
 
 - Backend runs with `DATA_PROVIDER=local` by default
 - Data is persisted in `backend/.local-db/agenda-facilitada.json`
 - Uploaded profile images are saved in `backend/.local-db/uploads/`
 - This is ideal for portfolio development and local demos
-- Supabase stays as the next migration step, without blocking current development
+- Supabase stays optional and does not block local development
 
 ## Example Seed Credentials
 
@@ -163,7 +171,7 @@ The backend includes seeded demo data for immediate testing.
 
 Use the seeded admin credentials exposed by the backend seed/auth implementation:
 
-- **Email:** `admin@agendafacilitada.com`
+- **Email:** `demo@example.com`
 - **Password:** `admin123`
 
 If the backend seed is adjusted later, keep the README aligned with the values defined in the seed source.
@@ -188,7 +196,7 @@ Create your backend environment file from `backend/.env.example` and adjust as n
 PORT=3333
 DATA_PROVIDER=local
 LOCAL_DB_PATH=.local-db/agenda-facilitada.json
-SUPABASE_URL=https://wyxtjkvhiwedkftfairg.supabase.co
+SUPABASE_URL=https://your-project-ref.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=
 SUPABASE_SCHEMA=public
 ```
@@ -196,9 +204,45 @@ SUPABASE_SCHEMA=public
 Notes:
 
 - `local` mode is ready and recommended for portfolio preparation
-- Supabase URL and schema are already prepared
+- Supabase URL and schema are placeholders and must be replaced with your own project values
 - `SUPABASE_SERVICE_ROLE_KEY` is required for runtime access
-- Base SQL schema is available in `backend/supabase/schema.sql` for setup in Supabase SQL Editor
+- Base SQL schema is available in `backend/supabase/schema.sql`
+
+## Supabase setup (ready SQL structure)
+
+If you want to run with Supabase, the project is already prepared.
+
+### 1) Create your Supabase project
+
+- Create a new project in Supabase
+- Open **SQL Editor**
+
+### 2) Create all backend tables in one step
+
+- Open file: `backend/supabase/schema.sql`
+- Copy and execute the full SQL script in Supabase SQL Editor
+
+This script creates the required tables, indexes, and default seed rows for the backend.
+
+### 3) Configure backend `.env`
+
+Set:
+
+```env
+DATA_PROVIDER=supabase
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SUPABASE_SCHEMA=public
+```
+
+### 4) Start backend normally
+
+```bash
+cd backend
+npm run dev
+```
+
+If `DATA_PROVIDER=local`, backend keeps running with JSON (`.local-db/agenda-facilitada.json`).
 
 ## PWA Support
 

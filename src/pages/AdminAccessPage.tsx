@@ -23,7 +23,7 @@ function createUser(): ManagedAccessUser {
     email: '',
     role: 'operator',
     maxSubUsers: 2,
-    databaseProvider: 'supabase',
+    databaseProvider: 'local',
     workspaceCode: '',
     active: true,
   };
@@ -205,8 +205,8 @@ export function AdminAccessPage() {
                   value={user.databaseProvider}
                   onChange={(event) => updateUser(user.id, { databaseProvider: event.target.value as DatabaseProvider })}
                 >
-                  <option value="supabase">Supabase</option>
                   <option value="local">Local</option>
+                  <option value="supabase">Supabase</option>
                   <option value="hybrid">Híbrido (Supabase + cache local)</option>
                 </select>
               </label>

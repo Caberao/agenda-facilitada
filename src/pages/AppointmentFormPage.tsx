@@ -576,7 +576,7 @@ export function AppointmentFormPage({ mode }: AppointmentFormPageProps) {
                       clientPhone: formatPhoneInput(event.target.value),
                     }))
                   }
-                  placeholder="+55 11 98888-0000"
+                  placeholder="+55 11 90000-0000"
                   required
                 />
               </label>

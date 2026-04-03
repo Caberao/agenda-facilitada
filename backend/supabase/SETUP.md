@@ -1,44 +1,44 @@
 # Supabase Setup (Agenda Facilitada)
 
-Use este guia para preparar o banco no Supabase antes de ligar o provider.
+Use this guide to prepare the Supabase database before enabling the provider.
 
-## 1) Abra o SQL Editor
+## 1) Open SQL Editor
 
-- Projeto: `https://wyxtjkvhiwedkftfairg.supabase.co`
+- Project: `https://your-project-ref.supabase.co`
 - Menu: `SQL Editor` -> `New query`
 
-## 2) Rode o schema base
+## 2) Run the base schema
 
-- Abra o arquivo `backend/supabase/schema.sql`
-- Copie e execute o conteúdo completo no SQL Editor
+- Open `backend/supabase/schema.sql`
+- Copy and run the full script in Supabase SQL Editor
 
-## 3) Pegue as credenciais
+## 3) Get credentials
 
 - Menu: `Project Settings` -> `Data API`
-- Copie:
-  - `Project URL` (já preenchida no `.env.example`)
+- Copy:
+  - `Project URL` (already referenced in `.env.example`)
   - `service_role` key
 
-## 4) Configure no backend (Render ou local)
+## 4) Configure backend (Render or local)
 
 ```env
 DATA_PROVIDER=supabase
-SUPABASE_URL=https://wyxtjkvhiwedkftfairg.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=<SUA_SERVICE_ROLE_KEY>
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<YOUR_SERVICE_ROLE_KEY>
 SUPABASE_SCHEMA=public
 ```
 
-## 5) Observação atual
+## 5) Current behavior
 
-O provider `supabase` já está ativo em runtime no backend.
-Se faltar alguma variável (`SUPABASE_URL` ou `SUPABASE_SERVICE_ROLE_KEY`), o sistema volta para fallback local.
+The `supabase` provider is already supported at runtime in the backend.
+If required env vars are missing (`SUPABASE_URL` or `SUPABASE_SERVICE_ROLE_KEY`), the app falls back to local provider.
 
-## 6) Importar dados do JSON local para Supabase
+## 6) Import local JSON data into Supabase
 
-No terminal, dentro de `backend/`:
+In terminal, inside `backend/`:
 
 ```bash
 npm run supabase:import-local
 ```
 
-O script lê `LOCAL_DB_PATH` (default: `.local-db/agenda-facilitada.json`) e grava tudo no Supabase.
+The script reads `LOCAL_DB_PATH` (default: `.local-db/agenda-facilitada.json`) and writes all data to Supabase.

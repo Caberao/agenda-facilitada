@@ -128,7 +128,7 @@ create index if not exists idx_birthday_backgrounds_group_id on public.birthday_
 
 -- Seed mínimo para manter login/admin e settings
 insert into public.app_users (id, name, email, role)
-values ('user_admin_1', 'Cristian Ferreira', 'admin@agendafacilitada.com', 'admin')
+values ('user_admin_1', 'Usuario Demo', 'demo@example.com', 'admin')
 on conflict (id) do update set
   name = excluded.name,
   email = excluded.email,
@@ -156,8 +156,8 @@ values (
   60,
   false,
   true,
-  'admin@agendafacilitada.com',
-  '+55 11 98888-0000',
+  'demo@example.com',
+  '+55 11 90000-0000',
   true,
   false,
   false

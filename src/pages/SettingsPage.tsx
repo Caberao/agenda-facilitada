@@ -372,7 +372,7 @@ export function SettingsPage() {
           <div className="settings-user-row">
             <div>
               <strong>{user?.name || 'Administrador'}</strong>
-              <p>{user?.email || 'admin@agendafacilitada.com'}</p>
+              <p>{user?.email || 'demo@example.com'}</p>
             </div>
             <span className="badge">Admin</span>
           </div>
@@ -390,3 +390,4 @@ export function SettingsPage() {
     </section>
   );
 }
+

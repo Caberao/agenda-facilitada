@@ -9,7 +9,7 @@ export function LoginPage() {
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
   const isLoading = useAppStore((state) => state.isLoading);
 
-  const [email, setEmail] = useState('admin@agendafacilitada.com');
+  const [email, setEmail] = useState('demo@example.com');
   const [password, setPassword] = useState('admin123');
   const [error, setError] = useState('');
 
@@ -71,3 +71,4 @@ export function LoginPage() {
     </section>
   );
 }
+
