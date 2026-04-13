@@ -9,8 +9,8 @@ export function LoginPage() {
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
   const isLoading = useAppStore((state) => state.isLoading);
 
-  const [email, setEmail] = useState('demo@example.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('tester@example.com');
+  const [password, setPassword] = useState('test123');
   const [error, setError] = useState('');
 
   if (isAuthenticated) {
@@ -42,6 +42,9 @@ export function LoginPage() {
         <h1>Acesse seu painel</h1>
         <p className="auth-card__subtitle">
           Faça login para acompanhar sua agenda, atualizar status e manter o dia sob controle.
+        </p>
+        <p className="auth-card__subtitle" style={{ marginTop: -8 }}>
+          Demo padrão: <strong>tester@example.com</strong> (modo leitura, sem salvar alterações).
         </p>
 
         <form className="form" onSubmit={handleSubmit}>

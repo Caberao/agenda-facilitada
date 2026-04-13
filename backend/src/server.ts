@@ -57,6 +57,29 @@ app.use(cors());
 app.use(express.json({ limit: '6mb' }));
 app.use('/uploads', express.static(uploadDirectory));
 
+app.use((request, response, next) => {
+  if (request.path === '/auth/login') {
+    next();
+    return;
+  }
+
+  const isMutationMethod = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(request.method.toUpperCase());
+  const authHeader = request.headers.authorization;
+  const isReadonlyTestToken =
+    typeof authHeader === 'string' && authHeader.trim().toLowerCase().startsWith('bearer demo-readonly-');
+
+  if (isMutationMethod && isReadonlyTestToken) {
+    sendError(
+      response,
+      403,
+      'Test mode is read-only. You can navigate and test flows, but changes are not persisted.',
+    );
+    return;
+  }
+
+  next();
+});
+
 function isAppointmentStatus(value: unknown): value is AppointmentStatus {
   return typeof value === 'string' && appointmentStatuses.includes(value as AppointmentStatus);
 }

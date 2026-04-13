@@ -15,16 +15,20 @@ import type {
 } from '../types/shared';
 
 const apiBaseUrl = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') || 'http://localhost:3333';
+const authTokenStorageKey = 'agenda_facilitada_token';
 
 type RequestOptions = Omit<RequestInit, 'body'> & {
   body?: unknown;
 };
 
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const authToken = localStorage.getItem(authTokenStorageKey);
+
   const response = await fetch(`${apiBaseUrl}${path}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       ...(options.headers || {}),
     },
     body: options.body !== undefined ? JSON.stringify(options.body) : undefined,

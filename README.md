@@ -8,8 +8,7 @@
   <a href="https://agenda-facilitada.vercel.app" target="_blank">Live Demo</a> •
   <a href="#-tech-stack">Tech Stack</a> •
   <a href="#-run-locally">Run Locally</a> •
-  <a href="#-supabase-setup">Supabase Setup</a> •
-  <a href="#-roadmap">Roadmap</a>
+  <a href="#-supabase-setup">Supabase Setup</a>
 </p>
 
 <p align="center">
@@ -24,9 +23,9 @@
 
 Agenda Facilitada is a portfolio-ready full-stack TypeScript project for appointment management, client tracking, reminders, and birthday workflows.
 
-It is built with a polished UI, modular backend architecture, and provider-based persistence:
-- Local JSON (default, ideal for demos)
-- Supabase (ready when you want cloud persistence)
+It supports two data providers:
+- `local` (default, JSON file)
+- `supabase` (cloud-ready provider)
 
 ## Key Features
 
@@ -37,6 +36,19 @@ It is built with a polished UI, modular backend architecture, and provider-based
 - Responsive UI (desktop and mobile)
 - PWA-ready base setup
 - Shared contracts between frontend and backend (`shared/types.ts`)
+
+## Demo Access
+
+The login screen is pre-filled with a **read-only test user** for safe demos.
+
+- **Test User (read-only, default):**
+  - Email: `tester@example.com`
+  - Password: `test123`
+  - Can navigate and test flows, but write requests are blocked by backend middleware.
+
+- **Admin User (full write):**
+  - Email: `demo@example.com`
+  - Password: `admin123`
 
 ## Tech Stack
 
@@ -72,3 +84,65 @@ agenda-facilitada/
 │     └─ SETUP.md
 ├─ shared/
 └─ README.md
+```
+
+## Run Locally
+
+### 1) Install dependencies
+
+```bash
+npm install
+cd backend
+npm install
+```
+
+### 2) Start backend
+
+```bash
+cd backend
+npm run dev
+```
+
+### 3) Start frontend
+
+```bash
+npm run dev
+```
+
+### 4) Frontend environment
+
+Create a root `.env` (from `.env.example`) with:
+
+```env
+VITE_API_URL=http://localhost:3333
+```
+
+## Backend Environment
+
+Create `backend/.env` (from `backend/.env.example`) and set:
+
+```env
+PORT=3333
+DATA_PROVIDER=local
+LOCAL_DB_PATH=.local-db/agenda-facilitada.json
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_SCHEMA=public
+```
+
+## Supabase Setup
+
+If you want cloud persistence:
+
+1. Create a Supabase project.
+2. Open SQL Editor.
+3. Execute `backend/supabase/schema.sql`.
+4. Set in `backend/.env`:
+   - `DATA_PROVIDER=supabase`
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `SUPABASE_SCHEMA=public`
+
+## License
+
+MIT.

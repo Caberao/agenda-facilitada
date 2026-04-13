@@ -9,6 +9,11 @@ export const adminCredentials = {
   password: 'admin123',
 };
 
+export const testCredentials = {
+  email: 'tester@example.com',
+  password: 'test123',
+};
+
 export const seedData: SeedData = {
   user: {
     id: 'user_admin_1',
